@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, Any
+
 @dataclass(frozen=True)
 class Zone:
     id:str
@@ -9,11 +10,13 @@ class Zone:
 class PlantProfile:
     id: str
     name: str
-    temp_range: Tuple[float,float] #температура в цельсиях
-    hum_air_range: Tuple[int,int] # Влажность воздуха в процентах
-    hum_soil_range: Tuple[int,int] # Влажность почвы в процентах
-    co2_range: Tuple[int,int] # Углеккислый газ в ppm
-    light_min:int # свет в люксах
+    temp_range: Tuple[float,float]
+    hum_air_range: Tuple[int,int]
+    hum_soil_range: Tuple[int,int]
+    co2_range: Tuple[int,int]
+    light_min:int
+    schedule: Any = None  # Можно указать тип и значение по умолчанию
+
 @dataclass(frozen=True)
 class Device:
     id: str
@@ -25,6 +28,7 @@ class Sensor:
     device_id: str
     kind: str  # "temp", "hum_air", "hum_soil", "light", "co2"
     unit: str  # "C", "%", "lux", "ppm"
+    zone_id: Optional[str] = None  # связь с зоной (если есть)
 @dataclass(frozen=True)
 class Actuator:
     id: str
@@ -32,9 +36,13 @@ class Actuator:
     kind: str  # "pump", "fan", "heater", "lamp", "vent"
 @dataclass(frozen=True)
 class Reading:
+
     id: str
+
     sensor_id: str
+
     ts: str  # ISO 8601 format
+
     value: float
 @dataclass(frozen=True)
 class Mode:
